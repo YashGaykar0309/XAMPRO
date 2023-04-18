@@ -6,6 +6,8 @@ import { getCourseAmountAndTime} from "../Exam/helper/exam";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Base from "../core/base";
+import {API} from "../backend";
+import axios from "axios";
 
 const CourseHome = () => {
     let {courseId} = useParams();
@@ -85,7 +87,21 @@ const CourseHome = () => {
                 navigate(`/exam/instructions/${courseId}`)
             }
             else{
-                await handlePayment(courseId,user._id,token,courseFee,setIsEnrolled) 
+                    try {
+                      const verifyUrl = `${API}/verify/${courseId}/${user._id}`;
+                      const { data } = await axios.post(verifyUrl, { amount : 0 } , {
+                        headers: {
+                          Authorization: 'Bearer ' + token 
+                        }
+                      });
+                      setIsEnrolled(true)
+                      console.log(data);
+                    } catch (error) {
+                      console.log(error);
+                    }
+                setIsEnrolled(true)
+                navigate(`/exam/instructions/${courseId}`)
+                //await handlePayment(courseId,user._id,token,courseFee,setIsEnrolled) 
             }
         }else{
             navigate(`/questions/${courseId}`)

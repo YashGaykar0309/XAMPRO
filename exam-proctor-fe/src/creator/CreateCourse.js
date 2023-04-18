@@ -17,6 +17,7 @@ const CreateCourse = () => {
         description:"",
         image:"",
         category:"",
+        emails: [],
         error:"",
         success:false
     })
